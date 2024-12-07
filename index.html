@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Ads</title>
+    <script src='//niphaumeenses.net/vignette.min.js' data-zone='8622066' data-sdk='show_8622066'></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(90deg, #0c0f13, #1e2125);
+            font-family: 'Arial', sans-serif;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+            text-align: center;
+        }
+        #panel {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            position: relative;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background: linear-gradient(45deg, cyan, magenta, blue);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        #circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 10px solid cyan;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: spin 5s linear infinite;
+            position: relative;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #counter {
+            font-size: 24px;
+            position: absolute;
+            color: white;
+        }
+        #adCounter {
+            font-size: 20px;
+            margin-top: 10px;
+            color: white;
+        }
+        #language-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 5px 10px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 5px;
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #language-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <button id="language-toggle">es/en</button>
+    <div id="panel">
+        <h1 id="title">Strategic Ads</h1>
+        <button id="show-ad">Ver Anuncio</button>
+        <button id="telegram-channel">Abrir Canal de Telegram</button>
+        <div id="circle">
+            <div id="counter">5</div>
+        </div>
+        <div id="adCounter">Anuncios vistos: <span id="viewedAds">0</span></div>
+    </div>
+
+    <script>
+        let countdown = 5;
+        let interval;
+        let language = 'es'; // Idioma predeterminado
+        let viewedAdsCount = localStorage.getItem('viewedAdsCount') ? parseInt(localStorage.getItem('viewedAdsCount')) : 0;
+
+        document.getElementById('viewedAds').innerText = viewedAdsCount;
+
+        function startCountdown() {
+            countdown = 5; // Reiniciar contador
+            document.getElementById('counter').innerText = countdown;
+            interval = setInterval(() => {
+                if (countdown > 0) {
+                    countdown--;
+                    document.getElementById('counter').innerText = countdown;
+                } else {
+                    clearInterval(interval);
+                    showAd(); // Mostrar anuncio al finalizar el contador
+                }
+            }, 1000);
+        }
+
+        function showAd() {
+            show_8622066().then(() => {
+                viewedAdsCount++;
+                localStorage.setItem('viewedAdsCount', viewedAdsCount); // Guardar en localStorage
+                document.getElementById('viewedAds').innerText = viewedAdsCount;
+                // No hay alerta, solo se reinicia el contador después del anuncio
+                startCountdown(); // Reiniciar contador después del anuncio
+            }).catch(() => {
+                console.error('Error al mostrar el anuncio.'); // Manejo de errores al mostrar el anuncio
+            });
+        }
+
+        document.getElementById('show-ad').addEventListener('click', showAd);
+        document.getElementById('telegram-channel').addEventListener('click', () => {
+            window.open('https://t.me/AdsFlowCreaator', '_blank'); // URL de tu canal de Telegram
+        });
+
+        document.getElementById('language-toggle').addEventListener('click', () => {
+            if (language === 'es') {
+                language = 'en';
+                document.getElementById('title').innerText = 'Strategic Ads';
+                document.getElementById('show-ad').innerText = 'Watch Ad';
+                document.getElementById('telegram-channel').innerText = 'Open Telegram Channel';
+                document.getElementById('language-toggle').innerText = 'es/en';
+            } else {
+                language = 'es';
+                document.getElementById('title').innerText = 'Strategic Ads';
+                document.getElementById('show-ad').innerText = 'Ver Anuncio';
+                document.getElementById('telegram-channel').innerText = 'Abrir Canal de Telegram';
+                document.getElementById('language-toggle').innerText = 'en/es';
+            }
+        });
+
+        // Iniciar el contador al cargar la página
+        startCountdown();
+    </script>
+</body>
+</html>
