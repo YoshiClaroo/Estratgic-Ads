@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strategic Ads</title>
-    <script src='//niphaumeenses.net/vignette.min.js' data-zone='8622066' data-sdk='show_8622066'></script>
     <style>
         body {
             margin: 0;
@@ -18,13 +17,20 @@
             flex-direction: column;
             min-height: 100vh;
             text-align: center;
+            position: relative;
+            overflow: hidden; /* Evita el desplazamiento en el fondo */
         }
         #panel {
             background: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            position: relative;
+            position: absolute; /* Cambiado a absoluto para centrarlo */
+            top: 50%; /* Centrado verticalmente */
+            left: 50%; /* Centrado horizontalmente */
+            transform: translate(-50%, -50%); /* Ajustar posición */
+            width: 300px; /* Ajustado el ancho del panel */
+            z-index: 5; /* Asegurarse de que esté por encima del panel de anuncios */
         }
         button {
             padding: 10px 20px;
@@ -40,32 +46,6 @@
         }
         button:hover {
             opacity: 0.8;
-        }
-        #circle {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 10px solid cyan;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: spin 5s linear infinite;
-            position: relative;
-            margin: 20px auto;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        #counter {
-            font-size: 24px;
-            position: absolute;
-            color: white;
-        }
-        #adCounter {
-            font-size: 20px;
-            margin-top: 10px;
-            color: white;
         }
         #language-toggle {
             position: absolute;
@@ -83,6 +63,44 @@
         #language-toggle:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+
+        /* Estilos para el panel de anuncios */
+        #adPanel {
+            position: fixed;
+            top: 100%; /* Comienza fuera de la pantalla */
+            left: 0;
+            width: 100%;
+            height: 100%; /* Altura completa para permitir desplazamiento */
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Alineado al inicio */
+            z-index: 10;
+            transition: top 0.5s ease; /* Transición suave */
+            overflow-y: auto; /* Permitir desplazamiento vertical */
+        }
+        #adContent {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            width: 90%; /* Ajustado para que el contenido se adapte */
+            max-width: 400px; /* Máximo ancho del panel */
+            max-height: 80%; /* Limitar la altura del panel */
+            overflow-y: auto; /* Permitir desplazamiento dentro del panel */
+        }
+        #close-panel {
+            margin-top: 10px; /* Espacio entre el contenido y el botón de cerrar */
+        }
+
+        /* Estilos para el banner */
+        #banner {
+            position: relative;
+            width: 100%;
+            height: 50px; /* Ajusta la altura del banner */
+            margin-top: auto; /* Asegura que el banner esté en la parte inferior */
+        }
     </style>
 </head>
 <body>
@@ -91,69 +109,77 @@
         <h1 id="title">Strategic Ads</h1>
         <button id="show-ad">Ver Anuncio</button>
         <button id="telegram-channel">Abrir Canal de Telegram</button>
-        <div id="circle">
-            <div id="counter">5</div>
-        </div>
-        <div id="adCounter">Anuncios vistos: <span id="viewedAds">0</span></div>
     </div>
 
+    <!-- Panel de anuncios -->
+    <div id="adPanel">
+        <div id="adContent">
+            <!-- Aquí se muestran los banners -->
+            <div id="ad-banners"></div> <!-- Contenedor para los banners -->
+            <button id="close-panel">Cerrar</button> <!-- Botón para cerrar el panel -->
+        </div>
+    </div>
+
+    <!-- Banner -->
+    <div id="banner">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'c24fcf8426acd1676bf15507a67d158b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//sowpoint.com/c24fcf8426acd1676bf15507a67d158b/invoke.js"></script>
+    </div>
+
+    <!-- Barra Social -->
+    <script type='text/javascript' src='//sowpoint.com/49/82/3d/49823d6687c99af0c32a56a736aacb70.js'></script>
+
     <script>
-        let countdown = 5;
-        let interval;
-        let language = 'es'; // Idioma predeterminado
-        let viewedAdsCount = localStorage.getItem('viewedAdsCount') ? parseInt(localStorage.getItem('viewedAdsCount')) : 0;
+        function loadAds() {
+            const adBanners = document.getElementById('ad-banners');
+            adBanners.innerHTML = ''; // Limpiar anuncios existentes
 
-        document.getElementById('viewedAds').innerText = viewedAdsCount;
-
-        function startCountdown() {
-            countdown = 5; // Reiniciar contador
-            document.getElementById('counter').innerText = countdown;
-            interval = setInterval(() => {
-                if (countdown > 0) {
-                    countdown--;
-                    document.getElementById('counter').innerText = countdown;
-                } else {
-                    clearInterval(interval);
-                    showAd(); // Mostrar anuncio al finalizar el contador
-                }
-            }, 1000);
+            // Crear un nuevo script para cargar anuncios
+            const adScript = document.createElement('script');
+            adScript.async = true;
+            adScript.src = '//sowpoint.com/e0c63680b9557cf0e66cde2cc1119ca5/invoke.js?' + new Date().getTime(); // Evitar caché usando la marca de tiempo
+            adBanners.appendChild(adScript);
+            adBanners.innerHTML += '<div id="container-e0c63680b9557cf0e66cde2cc1119ca5"></div>';
         }
 
-        function showAd() {
-            show_8622066().then(() => {
-                viewedAdsCount++;
-                localStorage.setItem('viewedAdsCount', viewedAdsCount); // Guardar en localStorage
-                document.getElementById('viewedAds').innerText = viewedAdsCount;
-                // No hay alerta, solo se reinicia el contador después del anuncio
-                startCountdown(); // Reiniciar contador después del anuncio
-            }).catch(() => {
-                console.error('Error al mostrar el anuncio.'); // Manejo de errores al mostrar el anuncio
-            });
-        }
+        document.getElementById('show-ad').addEventListener('click', () => {
+            loadAds(); // Cargar anuncios nuevos
+            document.getElementById('adPanel').style.top = '0'; // Deslizar hacia abajo
+        });
 
-        document.getElementById('show-ad').addEventListener('click', showAd);
         document.getElementById('telegram-channel').addEventListener('click', () => {
             window.open('https://t.me/AdsFlowCreaator', '_blank'); // URL de tu canal de Telegram
         });
 
         document.getElementById('language-toggle').addEventListener('click', () => {
-            if (language === 'es') {
-                language = 'en';
-                document.getElementById('title').innerText = 'Strategic Ads';
-                document.getElementById('show-ad').innerText = 'Watch Ad';
-                document.getElementById('telegram-channel').innerText = 'Open Telegram Channel';
-                document.getElementById('language-toggle').innerText = 'es/en';
-            } else {
-                language = 'es';
-                document.getElementById('title').innerText = 'Strategic Ads';
-                document.getElementById('show-ad').innerText = 'Ver Anuncio';
-                document.getElementById('telegram-channel').innerText = 'Abrir Canal de Telegram';
+            const title = document.getElementById('title');
+            const showAdBtn = document.getElementById('show-ad');
+            const telegramBtn = document.getElementById('telegram-channel');
+
+            if (title.innerText === 'Strategic Ads') {
+                title.innerText = 'Anuncios Estratégicos';
+                showAdBtn.innerText = 'Ver Anuncio';
+                telegramBtn.innerText = 'Abrir Canal de Telegram';
                 document.getElementById('language-toggle').innerText = 'en/es';
+            } else {
+                title.innerText = 'Strategic Ads';
+                showAdBtn.innerText = 'Watch Ad';
+                telegramBtn.innerText = 'Open Telegram Channel';
+                document.getElementById('language-toggle').innerText = 'es/en';
             }
         });
 
-        // Iniciar el contador al cargar la página
-        startCountdown();
+        document.getElementById('close-panel').addEventListener('click', () => {
+            document.getElementById('adPanel').style.top = '100%'; // Ocultar panel deslizando hacia arriba
+        });
     </script>
 </body>
 </html>
