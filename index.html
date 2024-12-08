@@ -12,14 +12,22 @@
             font-family: 'Arial', sans-serif;
             color: white;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
             min-height: 100vh;
             text-align: center;
             position: relative;
             overflow: hidden; /* Evita el desplazamiento en el fondo */
         }
+
+        /* Estilos para el banner superior */
+        #top-banner {
+            width: 100%;
+            height: 50px; /* Ajusta la altura del banner */
+            position: relative;
+            z-index: 1; /* Asegúrate de que esté por encima del fondo */
+        }
+
+        /* Estilos para el panel */
         #panel {
             background: rgba(0, 0, 0, 0.8);
             border-radius: 10px;
@@ -30,8 +38,18 @@
             left: 50%; /* Centrado horizontalmente */
             transform: translate(-50%, -50%); /* Ajustar posición */
             width: 300px; /* Ajustado el ancho del panel */
-            z-index: 5; /* Asegurarse de que esté por encima del panel de anuncios */
+            z-index: 5; /* Asegurarse de que esté por encima de otros elementos */
         }
+
+        /* Estilos para el banner inferior */
+        #banner {
+            width: 100%;
+            height: 50px; /* Ajusta la altura del banner */
+            position: relative;
+            z-index: 1; /* Asegúrate de que esté por encima del fondo */
+            margin-top: auto; /* Asegúrate de que esté en la parte inferior */
+        }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -46,22 +64,6 @@
         }
         button:hover {
             opacity: 0.8;
-        }
-        #language-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 5px 10px;
-            font-size: 12px;
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        #language-toggle:hover {
-            background: rgba(255, 255, 255, 0.3);
         }
 
         /* Estilos para el panel de anuncios */
@@ -93,18 +95,24 @@
         #close-panel {
             margin-top: 10px; /* Espacio entre el contenido y el botón de cerrar */
         }
-
-        /* Estilos para el banner */
-        #banner {
-            position: relative;
-            width: 100%;
-            height: 50px; /* Ajusta la altura del banner */
-            margin-top: auto; /* Asegura que el banner esté en la parte inferior */
-        }
     </style>
 </head>
 <body>
-    <button id="language-toggle">es/en</button>
+    
+    <!-- Banner en la parte superior -->
+    <div id="top-banner">
+        <script type="text/javascript">
+            atOptions = {
+                'key' : 'c24fcf8426acd1676bf15507a67d158b',
+                'format' : 'iframe',
+                'height' : 50,
+                'width' : 320,
+                'params' : {}
+            };
+        </script>
+        <script type="text/javascript" src="//sowpoint.com/c24fcf8426acd1676bf15507a67d158b/invoke.js"></script>
+    </div>
+
     <div id="panel">
         <h1 id="title">Strategic Ads</h1>
         <button id="show-ad">Ver Anuncio</button>
@@ -120,7 +128,7 @@
         </div>
     </div>
 
-    <!-- Banner -->
+    <!-- Banner en la parte inferior -->
     <div id="banner">
         <script type="text/javascript">
             atOptions = {
@@ -157,24 +165,6 @@
 
         document.getElementById('telegram-channel').addEventListener('click', () => {
             window.open('https://t.me/AdsFlowCreaator', '_blank'); // URL de tu canal de Telegram
-        });
-
-        document.getElementById('language-toggle').addEventListener('click', () => {
-            const title = document.getElementById('title');
-            const showAdBtn = document.getElementById('show-ad');
-            const telegramBtn = document.getElementById('telegram-channel');
-
-            if (title.innerText === 'Strategic Ads') {
-                title.innerText = 'Anuncios Estratégicos';
-                showAdBtn.innerText = 'Ver Anuncio';
-                telegramBtn.innerText = 'Abrir Canal de Telegram';
-                document.getElementById('language-toggle').innerText = 'en/es';
-            } else {
-                title.innerText = 'Strategic Ads';
-                showAdBtn.innerText = 'Watch Ad';
-                telegramBtn.innerText = 'Open Telegram Channel';
-                document.getElementById('language-toggle').innerText = 'es/en';
-            }
         });
 
         document.getElementById('close-panel').addEventListener('click', () => {
